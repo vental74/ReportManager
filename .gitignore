@@ -3,3 +3,12 @@
 ################################################################################
 
 /.vs
+/ReportManager.Api/bin/Debug/net6.0
+/ReportManager.Api/obj
+/ReportManager.Application/bin/Debug/net6.0
+/ReportManager.Application/obj
+/ReportManager.Domain/bin/Debug/net6.0
+/ReportManager.Domain/obj
+/ReportManager.Infrastructure/bin/Debug/net6.0
+/ReportManager.Infrastructure/obj
+/ReportManager.Infrastructure/EFCore/obj
