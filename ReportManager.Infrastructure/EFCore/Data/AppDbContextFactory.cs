@@ -14,12 +14,12 @@ namespace ReportManager.Infrastructure.EFCore.Data
     {
         public ReportManagerDbContext CreateDbContext(string[] args)
         {
-            var builder = new ConfigurationBuilder()
-                       .SetBasePath(Directory.GetCurrentDirectory())
-                       .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                       .AddEnvironmentVariables();
+            //var builder = new ConfigurationBuilder()
+            //           .SetBasePath(Directory.GetCurrentDirectory())
+            //           .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            //           .AddEnvironmentVariables();
 
-            IConfigurationRoot configuration = builder.Build();
+            //IConfigurationRoot configuration = builder.Build();
             //string connectionString = configuration.GetConnectionString(nameof(ReportManagerDbContext));
             var optionsBuilder = new DbContextOptionsBuilder<ReportManagerDbContext>();
             optionsBuilder.UseSqlServer(@"Data Source=localhost\SQLEXPRESS01;Initial Catalog=ReportManagerDb;Integrated Security=true");

@@ -6,7 +6,5 @@
         //public int IdUser { get; set; }
         public string Report { get; set; }
         public DateTime TimeStamp { get; set; }
-
-
     }
 }
