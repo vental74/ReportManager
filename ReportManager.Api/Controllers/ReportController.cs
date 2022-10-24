@@ -14,9 +14,10 @@ namespace ReportManager.Api.Controllers
             _service = service;
         }
         [HttpGet(Name = "GetReport")]
-        public Task<ReportEntity> Get()
+        public async Task<IResult> Get(int id)
         {
-            return _service.GetReport();
+            var result =await _service.GetReport(id);
+            return result == null ? Results.NotFound() : Results.Ok(result);
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReportManager.Infrastructure.EFCore.Data;
 
@@ -11,9 +12,10 @@ using ReportManager.Infrastructure.EFCore.Data;
 namespace ReportManager.Infrastructure.Migrations
 {
     [DbContext(typeof(ReportManagerDbContext))]
-    partial class ReportManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221024181641_AddIdUserToReport")]
+    partial class AddIdUserToReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
