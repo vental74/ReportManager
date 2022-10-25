@@ -1,5 +1,6 @@
 ﻿using ReportManager.Application.Model;
 using ReportManager.Domain;
+using ReportManager.Domain.Exceptions;
 using ReportManager.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,10 @@ namespace ReportManager.Application.Services
         }
         public async Task AddReport(ReportModel modelItem) 
         {
+            if (modelItem.Report.Length>20)
+            {
+                throw new TooBigReportException(modelItem.Report.Length.ToString());
+            }
             var reportEntity = _mapper.Map<ReportModel, ReportEntity>(modelItem);
             await _repository.Create(reportEntity);
         }

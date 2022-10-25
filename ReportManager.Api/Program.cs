@@ -7,6 +7,7 @@ using ReportManager.Infrastructure.EFCore.Data;
 using ReportManager.Infrastructure.Repositories;
 using AutoMapper;
 using ReportManager.Api.BackgroundJobs;
+using ReportManager.Api.Middleware;
 
 namespace ReportManager.Api
 {
@@ -32,11 +33,13 @@ namespace ReportManager.Api
             var DbContexOptionsBuilder = new DbContextOptionsBuilder<ReportManagerDbContext>();
             builder.Services.AddTransient<ReportManagerDbContext>(x =>new ReportManagerDbContext(DbContexOptionsBuilder.Options));
             builder.Services.AddTransient(typeof(ReportService));
-            builder.Services.AddHostedService<CreatingReportJob>();
+            
+            //builder.Services.AddHostedService<CreatingReportJob>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-          
+
+           
             app.UseSwagger();
             app.UseSwaggerUI();
 
@@ -45,7 +48,7 @@ namespace ReportManager.Api
             app.UseAuthorization();
 
             app.MapControllers();
-
+            app.UseMiddleware<MiddlewareException>();
             app.Run();
 
         }

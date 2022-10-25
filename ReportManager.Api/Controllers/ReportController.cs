@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ReportManager.Application.Model;
 using ReportManager.Application.Services;
 using ReportManager.Domain;
 
@@ -13,11 +14,19 @@ namespace ReportManager.Api.Controllers
         {
             _service = service;
         }
-        [HttpGet(Name = "GetReport")]
+        [HttpGet]
+        [Route("{id}")]
         public async Task<IResult> Get(int id)
         {
             var result =await _service.GetReport(id);
             return result == null ? Results.NotFound() : Results.Ok(result);
+        }
+        
+        [HttpPost]
+        public async Task<IResult> Create(ReportModel model)
+        {
+            await _service.AddReport(model);
+            return Results.Ok();
         }
     }
 }
