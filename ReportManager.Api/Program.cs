@@ -23,8 +23,8 @@ namespace ReportManager.Api
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            //builder.Services.AddTransient<IRepository<ReportEntity>, EFRepository<ReportEntity>>();
-            RegisterDbLayer(builder.Services);
+            builder.Services.AddTransient<IRepository<ReportEntity>, EFRepository<ReportEntity>>();
+            //RegisterDbLayer(builder.Services);
             builder.Services.AddTransient<Domain.Interfaces.IMapper, Application.Mapper.FirstMapper>();
             var autoMapperConfig = new MapperConfiguration(cfg =>
             {
@@ -54,12 +54,12 @@ namespace ReportManager.Api
 
         }
 
-        private static void RegisterDbLayer(IServiceCollection services)
-        {
-            services.AddTransient<ICreateRepository<ReportEntity>, EFCreateRepository<ReportEntity>>();
-            services.AddTransient<IUpdateRepository<ReportEntity>, EFUpdateRepository<ReportEntity>>();
-            services.AddTransient<IDeleteRepository<ReportEntity>, EFDeleteRepository<ReportEntity>>();
-            services.AddTransient<IGetRepository<ReportEntity>, EFGetRepository<ReportEntity>>();
-        }
+        //private static void RegisterDbLayer(IServiceCollection services)
+        //{
+        //    services.AddTransient<ICreateRepository<ReportEntity>, EFCreateRepository<ReportEntity>>();
+        //    services.AddTransient<IUpdateRepository<ReportEntity>, EFUpdateRepository<ReportEntity>>();
+        //    services.AddTransient<IDeleteRepository<ReportEntity>, EFDeleteRepository<ReportEntity>>();
+        //    services.AddTransient<IGetRepository<ReportEntity>, EFGetRepository<ReportEntity>>();
+        //}
     }
 }
