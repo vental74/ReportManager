@@ -24,7 +24,7 @@ namespace ReportManager.Application.Services
         }
         public async Task<ReportModel> GetReport(int id) 
         {
-            var reportEntity = await _repository.Get(x => x.Id == id);
+            var reportEntity = await _repository.Get(id);
             var reportModel = _mapper.Map<ReportEntity,ReportModel>(reportEntity);
             return reportModel;
         }

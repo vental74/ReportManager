@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using ReportManager.Domain.Entities;
 using ReportManager.Domain.Interfaces;
 using ReportManager.Infrastructure.EFCore.Data;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ReportManager.Infrastructure.Repositories
 {
-    public class EFRepository<T> : IRepository<T> where T : class
+    public class EFRepository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly ReportManagerDbContext _context;
         private  readonly ICache<T> _cache;
@@ -29,11 +30,21 @@ namespace ReportManager.Infrastructure.Repositories
         }
         public async Task<IEnumerable<T>> Get()//как с листом? пытаться добавить весь лист но не доставать?
         {
-            return await _context.Set<T>().ToListAsync();
+            var result = await _context.Set<T>().ToListAsync();
+            await Task.WhenAll(result.Select(x => Task.Run(async () => await _cache.Add(x))));
+            return result; 
         }
-        public async Task<T> Get(Expression<Func<T, bool>> predicate)//как с предикатом? пытаться всегда добавить но не доставать?
+        public async Task<T> Get(Expression<Func<T, bool>> predicate)
         {
             return await _context.Set<T>().FirstOrDefaultAsync(predicate);
+        }
+        public async Task<T> Get(int id)
+        {
+            if (await _cache.TryGet(id, out var result))
+                return result;
+            var item = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
+            await _cache.Add(item);
+            return item;
         }
         public async Task<T> Update(T item)
         {

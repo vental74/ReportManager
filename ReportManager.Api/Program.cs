@@ -8,6 +8,7 @@ using ReportManager.Infrastructure.Repositories;
 using AutoMapper;
 using ReportManager.Api.BackgroundJobs;
 using ReportManager.Api.Middleware;
+using ReportManager.Infrastructure.Cache;
 
 namespace ReportManager.Api
 {
@@ -34,7 +35,7 @@ namespace ReportManager.Api
             var DbContexOptionsBuilder = new DbContextOptionsBuilder<ReportManagerDbContext>();
             builder.Services.AddTransient<ReportManagerDbContext>(x =>new ReportManagerDbContext(DbContexOptionsBuilder.Options));
             builder.Services.AddTransient(typeof(ReportService));
-            
+            builder.Services.AddSingleton<ICache<ReportEntity>, FirstMemoryCache<ReportEntity>>();
             //builder.Services.AddHostedService<CreatingReportJob>();
             var app = builder.Build();
 
