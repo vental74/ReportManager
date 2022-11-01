@@ -9,6 +9,7 @@ using AutoMapper;
 using ReportManager.Api.BackgroundJobs;
 using ReportManager.Api.Middleware;
 using ReportManager.Infrastructure.Cache;
+using ReportManager.Application.Utilities;
 
 namespace ReportManager.Api
 {
@@ -36,6 +37,7 @@ namespace ReportManager.Api
             builder.Services.AddTransient<ReportManagerDbContext>(x =>new ReportManagerDbContext(DbContexOptionsBuilder.Options));
             builder.Services.AddTransient(typeof(ReportService));
             builder.Services.AddSingleton<ICache<ReportEntity>, FirstMemoryCache<ReportEntity>>();
+            builder.Services.AddSingleton<Domain.Interfaces.ILogger, FirstLogger>();
             //builder.Services.AddHostedService<CreatingReportJob>();
             var app = builder.Build();
 
@@ -51,6 +53,7 @@ namespace ReportManager.Api
 
             app.MapControllers();
             app.UseMiddleware<MiddlewareException>();
+            app.UseMiddleware<MiddlewareRequestLogger>();
             app.Run();
 
         }

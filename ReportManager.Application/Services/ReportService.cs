@@ -14,7 +14,6 @@ namespace ReportManager.Application.Services
     {
         private readonly IRepository<ReportEntity> _repository;
         private readonly IMapper _mapper;
-
         public ReportService(
             IRepository<ReportEntity> repository,
             IMapper mapper)
