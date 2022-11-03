@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ReportManager.Application.Mediatr.Report.Commands;
 using ReportManager.Application.Model;
 using ReportManager.Application.Services;
 using ReportManager.Domain;
@@ -10,9 +11,11 @@ namespace ReportManager.Api.Controllers
     public class ReportController : Controller
     {
         private readonly ReportService _service;
-        public ReportController(ReportService service)
+        private readonly MediatR.IMediator _mediator;
+        public ReportController(ReportService service,MediatR.IMediator mediator)
         {
             _service = service;
+            _mediator=mediator;
         }
         [HttpGet]
         [Route("{id}")]
@@ -23,9 +26,9 @@ namespace ReportManager.Api.Controllers
         }
         
         [HttpPost]
-        public async Task<IResult> Create(ReportModel model)
+        public async Task<IResult> Create(CreateReportCommand command)
         {
-            await _service.AddReport(model);
+            await _mediator.Send(command);
             return Results.Ok();
         }
     }

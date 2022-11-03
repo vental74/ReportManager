@@ -10,6 +10,8 @@ using ReportManager.Api.BackgroundJobs;
 using ReportManager.Api.Middleware;
 using ReportManager.Infrastructure.Cache;
 using ReportManager.Application.Utilities;
+using ReportManager.Api.Hubs;
+using MediatR;
 
 namespace ReportManager.Api
 {
@@ -38,7 +40,24 @@ namespace ReportManager.Api
             builder.Services.AddTransient(typeof(ReportService));
             builder.Services.AddSingleton<ICache<ReportEntity>, FirstMemoryCache<ReportEntity>>();
             builder.Services.AddSingleton<Domain.Interfaces.ILogger, FirstLogger>();
-            //builder.Services.AddHostedService<CreatingReportJob>();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder =>
+                    {
+                        builder
+                            .AllowCredentials()
+                            .WithOrigins("http://localhost:8080")
+                            .SetIsOriginAllowedToAllowWildcardSubdomains()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .SetIsOriginAllowed((host) => true);
+                    });
+            });
+            builder.Services.AddSignalR();
+            System.Reflection.Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.Contains(nameof(ReportManager))).ToArray();
+            builder.Services.AddMediatR(assemblies);
+            builder.Services.AddHostedService<SignalRBackgroundJob>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -46,14 +65,22 @@ namespace ReportManager.Api
            
             app.UseSwagger();
             app.UseSwaggerUI();
-
+            app.UseWebSockets();
+            app.UseCors("AllowAllOrigins");
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
-            app.MapControllers();
+            
             app.UseMiddleware<MiddlewareException>();
             app.UseMiddleware<MiddlewareRequestLogger>();
+            app.UseRouting();
+            app.UseEndpoints(route =>
+            {
+                route.MapHub<UpdateHub>("/update-hub");
+
+                route.MapControllers();
+            });
             app.Run();
 
         }
